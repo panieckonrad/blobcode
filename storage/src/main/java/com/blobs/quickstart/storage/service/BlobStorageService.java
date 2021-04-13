@@ -5,6 +5,7 @@ import com.blobs.quickstart.storage.model.FileItem;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,15 +28,28 @@ public class BlobStorageService {
     }
 
     public void upload(Resource resource) throws IOException {
-        // TODO
+
+        String fileName = resource.getFilename();
+        //String fileAbsolutePath = resource.getFile().getPath();
+        String fileAbsolutePath ="/Users/konrad.paniec/Desktop/pictures/konrado.txt";
+        var blob =  blobContainerAsyncClient.getBlobAsyncClient(fileName);
+        blob.uploadFromFile(fileAbsolutePath);
+
     }
 
     public void delete(String fileName) {
-        // TODO
+        var blob = this.blobContainerAsyncClient.getBlobAsyncClient(fileName);
+        blob.delete();
     }
 
     public byte[] download(String fileName) {
-        // TODO
+        String localPath = "/Users/konrad.paniec/Desktop/pictures/";
+        File downloadedFile = new File(localPath + fileName);
+
+        System.out.println("\nDownloading blob to\n\t " + localPath + fileName);
+
+        blobContainerAsyncClient.getBlobAsyncClient(fileName).downloadToFile(localPath + fileName);
+
         return new byte[0];
     }
 }
